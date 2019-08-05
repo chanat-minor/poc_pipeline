@@ -3,6 +3,7 @@ pipeline {
     stages {
         stage('SCM') {
             steps {
+                echo "Pulling source code from GitHub"
                 git "https://github.com/sindresorhus/open"
             }
         }
@@ -16,60 +17,65 @@ pipeline {
                 }
                 stage('Dependency check') {
                     steps {
-                        echo "Hello world"
+                        echo "Check vulnerability in dependencies used by the application"
                     }
                 }
                 stage('Credential Scan') {
                     steps {
-                        echo "Hello world"
-                    }
-                }
-                stage('Vulnerability Scan') {
-                    steps {
-                        echo "Hello world"
+                        echo "Scan for credential in source code"
                     }
                 }
             }
         }
         stage('Build') {
             steps {
-                echo "Hello world"
+                echo "Building application image"
+            }
+        }
+        stage('Vulnerability Scan') {
+            steps {
+                echo "Scan for vulnerability in image"
             }
         }
         stage('Deploy to Dev') {
             steps {
-                echo "Hello world"
+                echo "Deploy to devepment environment"
             }
         }
         stage('Integration Test') {
             steps {
-                echo "Hello world"
+                echo "Perform application integration test"
             }
         }
         stage('Deploy to UAT') {
             steps {
-                echo "Hello world"
+                echo "Deploy to UAT environment"
             }
         }
         stage('Functional Test') {
             steps {
-                echo "Hello world"
+                echo "Perform functional test or whatever test that is neccessary"
             }
         }
         stage('Perf Test') {
             steps {
-                echo "Hello world"
+                echo "Perform performance test"
+            }
+        }
+        stage('Push Image') {
+            steps {
+                echo "Push application image in a container registry on cloud e.g. ECR, GCR"
             }
         }
         stage('Deploy to prod') {
             steps {
-                echo "Hello world"
+                echo "Deploy to production environment using Blue-Green or Canary Deployment, roll back if fail"
             }
         }
         stage('PIR') {
             steps {
-                echo "Hello world"
+                echo "(Optional) Perform Post Implementation Test, roll back if fails"
             }
         }
     }
-}
+})
