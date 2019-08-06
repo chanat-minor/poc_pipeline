@@ -25,10 +25,14 @@ pipeline {
         stage('SonarQube analysis') {
             steps {
                 script {
+                    def scannerHome = '/var/jenkins_home/sonar-scanner/sonar-scanner-3.3.0.1492-linux';
                     def sonarProjectKey = 'simple-nodejs-app';
                     withSonarQubeEnv(credentialsId: 'sonarqube-local', installationName: 'SonarQube Local') {
                         // some block
-                        sh "sonar-scanner -Dsonar.projectKey=${sonarProjectKey} -Dsonar.sources=."
+                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${sonarProjectKey} -Dsonar.sources=."
+                    }
+                    timeout(time: 2, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
                     }
                 }
             }
