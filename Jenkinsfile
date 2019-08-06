@@ -4,17 +4,11 @@ pipeline {
         stage('SCM') {
             steps {
                 echo "Pulling source code from GitHub"
-                git "https://github.com/sindresorhus/open"
+                git "https://github.com/chanat-minor/simple-nodejs-app"
             }
         }
         stage('Prerequisites') {
             parallel {
-                stage('SonarQube analysis') {
-                    steps {
-                        withSonarQubeEnv("SonarQube local") { // If you have configured more than one global server connection, you can specify its name
-                        }
-                    }
-                }
                 stage('Dependency check') {
                     steps {
                         echo "Check vulnerability in dependencies used by the application"
@@ -24,6 +18,18 @@ pipeline {
                     steps {
                         echo "Scan for credential in source code"
                     }
+                }
+            }
+        }
+        stage('SonarQube analysis') {
+            steps {
+                script {
+                            def scannerHome = '/var/jenkins_home/sonar-scanner/sonar-scanner-3.3.0.1492-linux';
+                            def sonarProjectKey = 'simple-nodejs-app';
+                            withSonarQubeEnv(credentialsId: 'sonarqube-local', installationName: 'SonarQube Local') {
+                                // some block
+                                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${sonarProjectKey} -Dsonar.sources=."
+                            }
                 }
             }
         }
