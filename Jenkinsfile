@@ -4,7 +4,8 @@ pipeline {
         stage('SCM') {
             steps {
                 echo "Pulling source code from GitHub"
-                git "https://github.com/chanat-minor/simple-nodejs-app"
+                // git "https://github.com/chanat-minor/simple-nodejs-app"
+                checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'd8c3b15e-7eb5-400b-922b-1f4cf093fc10', url: 'https://github.com/chanat-minor/simple-nodejs-app']]]
             }
         }
         stage('Prerequisites') {
@@ -24,12 +25,11 @@ pipeline {
         stage('SonarQube analysis') {
             steps {
                 script {
-                            def scannerHome = '/var/jenkins_home/sonar-scanner/sonar-scanner-3.3.0.1492-linux';
-                            def sonarProjectKey = 'simple-nodejs-app';
-                            withSonarQubeEnv(credentialsId: 'sonarqube-local', installationName: 'SonarQube Local') {
-                                // some block
-                                sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=${sonarProjectKey} -Dsonar.sources=."
-                            }
+                    def sonarProjectKey = 'simple-nodejs-app';
+                    withSonarQubeEnv(credentialsId: 'sonarqube-local', installationName: 'SonarQube Local') {
+                        // some block
+                        sh "sonar-scanner -Dsonar.projectKey=${sonarProjectKey} -Dsonar.sources=."
+                    }
                 }
             }
         }
