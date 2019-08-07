@@ -17,7 +17,7 @@ pipeline {
                 }
                 stage('Credential Scan') {
                     steps {
-                        echo "Scan for credential in source code"
+                        echo "Scan for credential contained in source code"
                     }
                 }
             }
